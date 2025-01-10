@@ -29,5 +29,21 @@ public class ApiTest {
                 .post("/boards")
                 .then().log().all()
                 .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("일일게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+
+        RestAssured
+                .given().log().all()
+                .when()
+                .get("/boards")
+                .then().log().all()
+                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
     }
 }
