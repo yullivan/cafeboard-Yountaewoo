@@ -1,6 +1,7 @@
 package cafeboard;
 
 import cafeboard.Board.Dto.CreateBoard;
+import cafeboard.Board.Dto.UpdateBoard;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,5 +46,13 @@ public class ApiTest {
                 .get("/boards")
                 .then().log().all()
                 .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new UpdateBoard("수정한 자유게시판", 1L))
+                .put("/boards")
+                .then().log().all()
+                .statusCode(200);
     }
 }
