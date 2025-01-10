@@ -42,4 +42,11 @@ public class BoardService {
         findBoard.updateTitle(updateBoard.title());
         return new UpdateBoard(findBoard.getTitle(), findBoard.getId());
     }
+
+    // 게시판 삭제
+    public void deleteBoard(Long boardId) {
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(
+                () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + boardId));
+        boardRepository.delete(findBoard);
+    }
 }
