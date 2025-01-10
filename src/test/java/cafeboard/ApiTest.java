@@ -2,6 +2,7 @@ package cafeboard;
 
 import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.UpdateBoard;
+import cafeboard.Post.DTO.CreatePost;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +73,29 @@ public class ApiTest {
                 .given().log().all()
                 .when()
                 .get("/boards")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 게시글테스트() {
+        //게시판 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("자유게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+
+        // 게시글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
+                .when()
+                .post("/posts")
                 .then().log().all()
                 .statusCode(200);
     }
