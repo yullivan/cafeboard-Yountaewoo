@@ -45,4 +45,8 @@ public class Board {
     public LocalDateTime getUpdatedTime() {
         return updatedTime;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

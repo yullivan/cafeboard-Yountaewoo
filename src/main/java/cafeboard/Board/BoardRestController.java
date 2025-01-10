@@ -3,10 +3,8 @@ package cafeboard.Board;
 import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.CreateBoardResponse;
 import cafeboard.Board.Dto.FindAllResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import cafeboard.Board.Dto.UpdateBoard;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,4 +28,11 @@ public class BoardRestController {
     public List<FindAllResponse> findAll() {
         return boardService.findAll();
     }
+
+    //게시판 수정
+    @PutMapping("/boards")
+    public UpdateBoard updateBoard(@RequestBody UpdateBoard updateBoard) {
+        return boardService.updateBoard(updateBoard);
+    }
+
 }
