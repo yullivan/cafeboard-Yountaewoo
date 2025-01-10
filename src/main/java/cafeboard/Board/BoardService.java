@@ -1,6 +1,7 @@
 package cafeboard.Board;
 
 import cafeboard.Board.Dto.CreateBoard;
+import cafeboard.Board.Dto.CreateBoardResponse;
 import org.springframework.stereotype.Service;
 
 import javax.swing.plaf.PanelUI;
@@ -14,8 +15,9 @@ public class BoardService {
     }
 
     // 게시판 생성
-    public void createBoard(CreateBoard createBoard) {
+    public CreateBoardResponse createBoard(CreateBoard createBoard) {
         Board board = new Board(createBoard.title());
         boardRepository.save(board);
+        return new CreateBoardResponse(board.getTitle(), board.getCreatedTime(), board.getId());
     }
 }
