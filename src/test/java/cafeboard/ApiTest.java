@@ -4,6 +4,7 @@ import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.UpdateBoard;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.DTO.CreateComment;
+import cafeboard.Comment.DTO.CreateCommentResponse;
 import cafeboard.Post.DTO.CreatePost;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -106,7 +107,7 @@ public class ApiTest {
     }
 
     @Test
-    void 댓글ApiTest() {
+    void 댓글생성Test() {
 
         //게시판 생성
         RestAssured
@@ -128,14 +129,25 @@ public class ApiTest {
                 .then().log().all()
                 .statusCode(200);
 
+
         //댓글 생성
-        RestAssured
+        CreateCommentResponse createCommentResponse = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new CreateComment("우와!", 1L))
                 .when()
                 .post("/comments")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .as(CreateCommentResponse.class);
+
+        assertThat(createCommentResponse.postId()).isEqualTo(1);
+
+    }
+
+    @Test
+    void 댓글수정Test() {
+
     }
 }
