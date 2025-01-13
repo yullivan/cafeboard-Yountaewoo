@@ -39,4 +39,12 @@ public class CommentService {
         findComment.updateContent(updateComment.content());
         return new UpdateCommentResponse(findComment.getContent(), findComment.getId());
     }
+
+    //댓글 삭제
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment findComment = commentRepository.findById(commentId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + commentId));
+        commentRepository.delete(findComment);
+    }
 }

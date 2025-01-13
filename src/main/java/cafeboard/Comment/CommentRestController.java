@@ -25,4 +25,10 @@ public class CommentRestController {
     public UpdateCommentResponse updateComment(@PathVariable Long commentId, @RequestBody UpdateComment updateComment) {
         return commentService.updateComment(commentId, updateComment);
     }
+
+    //댓글 삭제
+    @DeleteMapping("/comments/{commentId}")
+    public void deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+    }
 }
