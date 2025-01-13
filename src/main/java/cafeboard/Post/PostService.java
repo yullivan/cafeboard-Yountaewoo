@@ -7,6 +7,7 @@ import cafeboard.Board.Dto.CreateBoardResponse;
 import cafeboard.Post.DTO.CreatePost;
 import cafeboard.Post.DTO.CreatePostResponse;
 import cafeboard.Post.DTO.FindAllPostsResponse;
+import cafeboard.Post.DTO.FindDetailPostResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -40,6 +41,17 @@ public class PostService {
                 .stream()
                 .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size()))
                 .toList());
+    }
+
+    //게시글 상세 조회
+    public FindDetailPostResponse findById(Long postId) {
+        Post findPost = postRepository.findById(postId).orElseThrow(
+                () -> new RuntimeException("ID 를 찾을 수 없습니다:" + postId));
+        List<FindDetailPostResponse.Comment> comments = findPost.getComments()
+                .stream()
+                .map(comment -> new FindDetailPostResponse.Comment(comment.getContent()))
+                .toList();
+        return new FindDetailPostResponse(comments, findPost.getContent());
     }
 
 }

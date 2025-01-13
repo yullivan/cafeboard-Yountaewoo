@@ -3,10 +3,8 @@ package cafeboard.Post;
 import cafeboard.Post.DTO.CreatePost;
 import cafeboard.Post.DTO.CreatePostResponse;
 import cafeboard.Post.DTO.FindAllPostsResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import cafeboard.Post.DTO.FindDetailPostResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PostRestController {
@@ -27,6 +25,12 @@ public class PostRestController {
     @GetMapping("/posts")
     public FindAllPostsResponse findAll() {
         return postService.findAll();
+    }
+
+    //게시글 살세 조회
+    @GetMapping("/posts/{postId}")
+    public FindDetailPostResponse findById(@PathVariable Long postId) {
+        return postService.findById(postId);
     }
 }
 
