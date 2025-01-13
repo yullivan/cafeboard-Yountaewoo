@@ -3,6 +3,7 @@ package cafeboard.Comment;
 import cafeboard.Comment.DTO.CreateComment;
 import cafeboard.Comment.DTO.CreateCommentResponse;
 import cafeboard.Comment.DTO.UpdateComment;
+import cafeboard.Comment.DTO.UpdateCommentResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +22,7 @@ public class CommentRestController {
 
     //댓글 수정
     @PutMapping("/comments/{commentId}")
-    public void updateComment(@PathVariable Long commentId, @RequestBody UpdateComment updateComment) {
-        commentService.updateComment(commentId, updateComment);
+    public UpdateCommentResponse updateComment(@PathVariable Long commentId, @RequestBody UpdateComment updateComment) {
+        return commentService.updateComment(commentId, updateComment);
     }
 }
