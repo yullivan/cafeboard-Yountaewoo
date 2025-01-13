@@ -1,9 +1,6 @@
 package cafeboard.Board;
 
-import cafeboard.Board.Dto.CreateBoard;
-import cafeboard.Board.Dto.CreateBoardResponse;
-import cafeboard.Board.Dto.FindAllResponse;
-import cafeboard.Board.Dto.UpdateBoard;
+import cafeboard.Board.Dto.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,4 +38,9 @@ public class BoardRestController {
         boardService.deleteBoard(boardId);
     }
 
+    // 특정 게시판의 게시글 목록 조회
+    @GetMapping("/boards/{boardId}")
+    public FindDetailBoardResponse findById(@PathVariable Long boardId) {
+        return boardService.findById(boardId);
+    }
 }
