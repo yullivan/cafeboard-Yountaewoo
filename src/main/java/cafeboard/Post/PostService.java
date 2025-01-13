@@ -44,7 +44,7 @@ public class PostService {
     //게시글 상세 조회
     public FindDetailPostResponse findById(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(
-                () -> new RuntimeException("ID 를 찾을 수 없습니다:" + postId));
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postId));
         List<FindDetailPostResponse.Comment> comments = findPost.getComments()
                 .stream()
                 .map(comment -> new FindDetailPostResponse.Comment(comment.getContent()))
@@ -62,4 +62,11 @@ public class PostService {
         return new UpdatePostResponse(findPost.getTitle(), findPost.getContent(), findPost.getId());
     }
 
+    //게시글 삭제
+    @Transactional
+    public void deleteById(Long boardId) {
+        Post findPost = postRepository.findById(boardId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + boardId));
+        postRepository.delete(findPost);
+    }
 }

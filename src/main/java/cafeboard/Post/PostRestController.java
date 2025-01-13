@@ -35,5 +35,11 @@ public class PostRestController {
     public UpdatePostResponse updateById(@RequestBody UpdatePost updatePost) {
         return postService.updateById(updatePost);
     }
+
+    //게시글 삭제
+    @DeleteMapping("/posts/{postId}")
+    public void deleteById(@PathVariable Long postId) {
+        postService.deleteById(postId);
+    }
 }
 
