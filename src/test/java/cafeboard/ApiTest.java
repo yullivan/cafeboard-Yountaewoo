@@ -9,6 +9,7 @@ import cafeboard.Comment.DTO.UpdateComment;
 import cafeboard.Comment.DTO.UpdateCommentResponse;
 import cafeboard.Post.DTO.CreatePost;
 import cafeboard.Post.DTO.FindAllPostsResponse;
+import cafeboard.Post.DTO.FindDetailPostResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -278,7 +279,7 @@ public class ApiTest {
                 .then().log().all()
                 .statusCode(200);
 
-        // 댓글 조회
+        // 게시글 목록 조회
         FindAllPostsResponse findAllPostsResponse = RestAssured
                 .given().log().all()
                 .when()
@@ -289,5 +290,51 @@ public class ApiTest {
                 .as(FindAllPostsResponse.class);
 
         assertThat(findAllPostsResponse.posts().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 게시글상세조회ApiTest() {
+        //게시판 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("자유게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200);
+
+        // 게시글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
+                .when()
+                .post("/posts")
+                .then().log().all()
+                .statusCode(200);
+
+        //댓글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateComment("우와!", 1L))
+                .when()
+                .post("/comments")
+                .then().log().all()
+                .statusCode(200);
+
+        //게시글 상세 조회
+        FindDetailPostResponse findDetailPostResponse = RestAssured
+                .given().log().all()
+                .pathParam("postId", 1L)
+                .when()
+                .get("/posts/{postId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(FindDetailPostResponse.class);
+
+        assertThat(findDetailPostResponse.comments().size()).isEqualTo(1);
     }
 }
