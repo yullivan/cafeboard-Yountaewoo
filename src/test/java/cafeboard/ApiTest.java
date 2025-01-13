@@ -1,6 +1,7 @@
 package cafeboard;
 
 import cafeboard.Board.Dto.CreateBoard;
+import cafeboard.Board.Dto.FindDetailBoardResponse;
 import cafeboard.Board.Dto.UpdateBoard;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.DTO.CreateComment;
@@ -414,5 +415,41 @@ public class ApiTest {
                 .extract()
                 .as(FindAllPostsResponse.class);
         assertThat(findAllPostsResponse.posts().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 특정게시판의게시글목록조회ApiTest() {
+        //게시판 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("자유게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200);
+
+        // 게시글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
+                .when()
+                .post("/posts")
+                .then().log().all()
+                .statusCode(200);
+
+        //특정 게시판의 게시글 목록 조회
+        FindDetailBoardResponse findDetailBoardResponse = RestAssured
+                .given().log().all()
+                .pathParam("boardId", 1L)
+                .when()
+                .get("/boards/{boardId}")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(FindDetailBoardResponse.class);
+
+        assertThat(findDetailBoardResponse.posts().size()).isEqualTo(1);
     }
 }
