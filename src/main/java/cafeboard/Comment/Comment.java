@@ -1,5 +1,6 @@
 package cafeboard.Comment;
 
+import cafeboard.Member.Member;
 import cafeboard.Post.Post;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,6 +27,9 @@ public class Comment {
 
     @ManyToOne
     private Post post;
+
+    @ManyToOne
+    private Member member;
 
     protected Comment() {
     }

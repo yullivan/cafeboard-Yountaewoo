@@ -2,6 +2,7 @@ package cafeboard.Post;
 
 import cafeboard.Board.Board;
 import cafeboard.Comment.Comment;
+import cafeboard.Member.Member;
 import jakarta.persistence.*;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,6 +33,9 @@ public class Post {
 
     @ManyToOne
     private Board board;
+
+    @ManyToOne
+    private Member member;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();

@@ -1,5 +1,6 @@
 package cafeboard.Board;
 
+import cafeboard.Member.Member;
 import cafeboard.Post.Post;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
