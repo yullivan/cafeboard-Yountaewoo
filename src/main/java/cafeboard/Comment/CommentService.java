@@ -21,12 +21,13 @@ public class CommentService {
     }
 
     // 댓글 생성
-    public void createComment(CreateComment createComment) {
+    public CreateCommentResponse createComment(CreateComment createComment) {
         Post findPost = postRepository.findById(createComment.postId()).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + createComment.postId()));
 
         Comment comment = new Comment(createComment.content(), findPost);
         commentRepository.save(comment);
+        return new CreateCommentResponse(comment.getContent(), comment.getId());
     }
 
     //댓글 수정

@@ -15,8 +15,8 @@ public class CommentRestController {
 
     // 댓글 생성
     @PostMapping("/comments")
-    public void createComment(@RequestBody CreateComment createComment) {
-        commentService.createComment(createComment);
+    public CreateCommentResponse createComment(@RequestBody CreateComment createComment) {
+        return commentService.createComment(createComment);
     }
 
     //댓글 수정
