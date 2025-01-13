@@ -73,15 +73,13 @@
 
 ### 조회 Get
 
-- postId : long ->게시글 ID
 - commentId : long -> 댓글 ID
 
 ### 수정 "/comments/{commentId}" Put
 
-- postId : long -> 게시글 ID
 - commentId : long -> 댓글 ID
+-
 
 ### 삭제 "/comments/{commentId}" Delete
 
-- postId : long ->게시글 ID
 - commentId : long -> 댓글 ID
