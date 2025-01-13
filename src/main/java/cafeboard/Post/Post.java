@@ -1,6 +1,7 @@
 package cafeboard.Post;
 
 import cafeboard.Board.Board;
+import cafeboard.Comment.Comment;
 import jakarta.persistence.*;
 import org.springframework.cglib.core.Local;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -30,6 +33,9 @@ public class Post {
     @ManyToOne
     private Board board;
 
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
+
     protected Post() {
     }
 
@@ -37,6 +43,10 @@ public class Post {
         this.board = board;
         this.title = title;
         this.content = content;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
     }
 
     public Board getBoard() {

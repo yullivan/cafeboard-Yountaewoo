@@ -6,9 +6,11 @@ import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.CreateBoardResponse;
 import cafeboard.Post.DTO.CreatePost;
 import cafeboard.Post.DTO.CreatePostResponse;
+import cafeboard.Post.DTO.FindAllPostsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -31,4 +33,13 @@ public class PostService {
         return new CreatePostResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedTime()
                 , post.getId());
     }
+
+    //게시글 목록 조회
+    public FindAllPostsResponse findAll() {
+        return new FindAllPostsResponse(postRepository.findAll()
+                .stream()
+                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size()))
+                .toList());
+    }
+
 }
