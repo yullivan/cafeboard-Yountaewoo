@@ -2,6 +2,8 @@ package cafeboard;
 
 import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.UpdateBoard;
+import cafeboard.Comment.Comment;
+import cafeboard.Comment.DTO.CreateComment;
 import cafeboard.Post.DTO.CreatePost;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -9,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ApiTest {
@@ -22,7 +27,7 @@ public class ApiTest {
     }
 
     @Test
-    void 상품목록조회() {
+    void 게시판ApiTest() {
         //게시판 생성
         RestAssured
                 .given().log().all()
@@ -31,7 +36,7 @@ public class ApiTest {
                 .when()
                 .post("/boards")
                 .then().log().all()
-                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+                .statusCode(200);
 
         RestAssured
                 .given().log().all()
@@ -40,7 +45,7 @@ public class ApiTest {
                 .when()
                 .post("/boards")
                 .then().log().all()
-                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+                .statusCode(200);
 
         //게시판 조회
         RestAssured
@@ -48,7 +53,7 @@ public class ApiTest {
                 .when()
                 .get("/boards")
                 .then().log().all()
-                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+                .statusCode(200);
 
         //게시판 수정
         RestAssured
@@ -78,7 +83,7 @@ public class ApiTest {
     }
 
     @Test
-    void 게시글테스트() {
+    void 게시글ApiTest() {
         //게시판 생성
         RestAssured
                 .given().log().all()
@@ -96,6 +101,40 @@ public class ApiTest {
                 .body(new CreatePost("점메추", "점심메뉴추천", 1L))
                 .when()
                 .post("/posts")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 댓글ApiTest() {
+
+        //게시판 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("자유게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200); // 요청에 대한 서버 응답의 상태코드가 200인지 검증
+
+        // 게시글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
+                .when()
+                .post("/posts")
+                .then().log().all()
+                .statusCode(200);
+
+        //댓글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateComment("우와!", 1L))
+                .when()
+                .post("/comments")
                 .then().log().all()
                 .statusCode(200);
     }

@@ -3,6 +3,7 @@ package cafeboard.Comment;
 import cafeboard.Comment.DTO.CreateComment;
 import cafeboard.Comment.DTO.CreateCommentResponse;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,7 +16,7 @@ public class CommentRestController {
 
     // 댓글 생성
     @PostMapping("/comments")
-    public CreateCommentResponse createComment(CreateComment createComment) {
-        return commentService.createComment(createComment);
+    public void createComment(@RequestBody CreateComment createComment) {
+        commentService.createComment(createComment);
     }
 }
