@@ -7,9 +7,7 @@ import cafeboard.Comment.DTO.CreateComment;
 import cafeboard.Comment.DTO.CreateCommentResponse;
 import cafeboard.Comment.DTO.UpdateComment;
 import cafeboard.Comment.DTO.UpdateCommentResponse;
-import cafeboard.Post.DTO.CreatePost;
-import cafeboard.Post.DTO.FindAllPostsResponse;
-import cafeboard.Post.DTO.FindDetailPostResponse;
+import cafeboard.Post.DTO.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -336,5 +334,43 @@ public class ApiTest {
                 .as(FindDetailPostResponse.class);
 
         assertThat(findDetailPostResponse.comments().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 게시글수정ApiTest() {
+        //게시판 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreateBoard("자유게시판"))
+                .when()
+                .post("/boards")
+                .then().log().all()
+                .statusCode(200);
+
+        // 게시글 생성
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
+                .when()
+                .post("/posts")
+                .then().log().all()
+                .statusCode(200);
+
+        //게시글 수정
+        UpdatePostResponse updatePostResponse = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new UpdatePost("저메추", "저녁메뉴추천", 1L))
+                .when()
+                .put("/posts")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(UpdatePostResponse.class);
+
+
+        assertThat(updatePostResponse.content()).isEqualTo("저녁메뉴추천");
     }
 }
