@@ -72,4 +72,12 @@ public class Post {
     public LocalDateTime getUpdatedTime() {
         return updatedTime;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

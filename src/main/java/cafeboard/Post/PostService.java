@@ -4,10 +4,8 @@ import cafeboard.Board.Board;
 import cafeboard.Board.BoardRepository;
 import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.CreateBoardResponse;
-import cafeboard.Post.DTO.CreatePost;
-import cafeboard.Post.DTO.CreatePostResponse;
-import cafeboard.Post.DTO.FindAllPostsResponse;
-import cafeboard.Post.DTO.FindDetailPostResponse;
+import cafeboard.Post.DTO.*;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -52,6 +50,16 @@ public class PostService {
                 .map(comment -> new FindDetailPostResponse.Comment(comment.getContent()))
                 .toList();
         return new FindDetailPostResponse(comments, findPost.getContent());
+    }
+
+    //게시글 수정
+    @Transactional
+    public UpdatePostResponse updateById(UpdatePost updatePost) {
+        Post findPost = postRepository.findById(updatePost.id()).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + updatePost.id()));
+        findPost.updateContent(updatePost.content());
+        findPost.updateTitle(updatePost.title());
+        return new UpdatePostResponse(findPost.getTitle(), findPost.getContent(), findPost.getId());
     }
 
 }

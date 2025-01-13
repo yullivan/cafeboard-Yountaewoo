@@ -1,9 +1,6 @@
 package cafeboard.Post;
 
-import cafeboard.Post.DTO.CreatePost;
-import cafeboard.Post.DTO.CreatePostResponse;
-import cafeboard.Post.DTO.FindAllPostsResponse;
-import cafeboard.Post.DTO.FindDetailPostResponse;
+import cafeboard.Post.DTO.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,6 +28,12 @@ public class PostRestController {
     @GetMapping("/posts/{postId}")
     public FindDetailPostResponse findById(@PathVariable Long postId) {
         return postService.findById(postId);
+    }
+
+    //게시글 수정
+    @PutMapping("/posts")
+    public UpdatePostResponse updateById(@RequestBody UpdatePost updatePost) {
+        return postService.updateById(updatePost);
     }
 }
 
