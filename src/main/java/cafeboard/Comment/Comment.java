@@ -54,4 +54,8 @@ public class Comment {
     public LocalDateTime getUpdatedTime() {
         return updatedTime;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
