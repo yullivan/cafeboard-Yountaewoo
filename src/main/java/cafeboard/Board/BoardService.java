@@ -1,6 +1,7 @@
 package cafeboard.Board;
 
 import cafeboard.Board.Dto.*;
+import cafeboard.Post.PostRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,13 @@ import java.util.NoSuchElementException;
 
 @Service
 public class BoardService {
-    private final BoardRepository boardRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    private final BoardRepository boardRepository;
+    private final PostRepository postRepository;
+
+    public BoardService(BoardRepository boardRepository, PostRepository postRepository) {
         this.boardRepository = boardRepository;
+        this.postRepository = postRepository;
     }
 
     // 게시판 생성
@@ -38,12 +42,5 @@ public class BoardService {
                 () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + updateBoard.id()));
         findBoard.updateTitle(updateBoard.title());
         return new UpdateBoard(findBoard.getTitle(), findBoard.getId());
-    }
-
-    // 게시판 삭제
-    public void deleteBoard(Long boardId) {
-        Board findBoard = boardRepository.findById(boardId).orElseThrow(
-                () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + boardId));
-        boardRepository.delete(findBoard);
     }
 }

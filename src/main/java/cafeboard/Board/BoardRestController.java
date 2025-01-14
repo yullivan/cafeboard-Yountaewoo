@@ -31,10 +31,4 @@ public class BoardRestController {
     public UpdateBoard updateBoard(@RequestBody UpdateBoard updateBoard) {
         return boardService.updateBoard(updateBoard);
     }
-
-    // 게시판 삭제
-    @DeleteMapping("/boards/{boardId}")
-    public void deleteBoard(@PathVariable Long boardId) {
-        boardService.deleteBoard(boardId);
-    }
 }
