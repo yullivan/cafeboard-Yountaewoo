@@ -40,7 +40,7 @@ public class PostService {
     public FindAllPostsResponse findAll() {
         return new FindAllPostsResponse(postRepository.findAll()
                 .stream()
-                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size(), post.getTitle()))
+                .map(post -> new FindAllPostsResponse.PostResponse(post.getId(), post.getComments().size(), post.getTitle()))
                 .toList());
     }
 
@@ -48,9 +48,9 @@ public class PostService {
     public FindDetailPostResponse findById(Long postId) {
         Post findPost = postRepository.findById(postId).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postId));
-        List<FindDetailPostResponse.Comment> comments = findPost.getComments()
+        List<FindDetailPostResponse.CommentResponse> comments = findPost.getComments()
                 .stream()
-                .map(comment -> new FindDetailPostResponse.Comment(comment.getContent()))
+                .map(comment -> new FindDetailPostResponse.CommentResponse(comment.getContent()))
                 .toList();
         return new FindDetailPostResponse(comments, findPost.getContent());
     }
@@ -76,9 +76,9 @@ public class PostService {
 
     //특정 게시판의 게시글 목록 조회
     public FindAllPostsResponse findByBoardId(Long boardId) {
-        List<FindAllPostsResponse.Post> list = postRepository.findByBoardId(boardId)
+        List<FindAllPostsResponse.PostResponse> list = postRepository.findByBoardId(boardId)
                 .stream()
-                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size(), post.getTitle()))
+                .map(post -> new FindAllPostsResponse.PostResponse(post.getId(), post.getComments().size(), post.getTitle()))
                 .toList();
         FindAllPostsResponse response = new FindAllPostsResponse(list);
         return response;

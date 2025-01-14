@@ -3,10 +3,10 @@ package cafeboard.Post.DTO;
 import java.util.List;
 
 public record FindDetailPostResponse(
-        List<Comment> comments,
+        List<CommentResponse> comments,
         String content
 ) {
-    public record Comment(
+    public record CommentResponse(
             String content
     ) {
     }

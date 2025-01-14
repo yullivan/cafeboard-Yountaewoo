@@ -5,9 +5,9 @@ import cafeboard.Post.Post;
 import java.util.List;
 
 public record FindAllPostsResponse(
-        List<Post> posts
+        List<PostResponse> posts
 ) {
-    public record Post(
+    public record PostResponse(
             Long postId,
             int commentCount,
             String title
