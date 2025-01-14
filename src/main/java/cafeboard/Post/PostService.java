@@ -29,7 +29,7 @@ public class PostService {
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + createPost.boardId()));
         Post post = new Post(findBoard, createPost.title(), createPost.content());
         postRepository.save(post);
-        return new CreatePostResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedTime()
+        return new CreatePostResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedAt()
                 , post.getId());
     }
 

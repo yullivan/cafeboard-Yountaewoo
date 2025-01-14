@@ -20,7 +20,7 @@ public class BoardService {
     public CreateBoardResponse createBoard(CreateBoard createBoard) {
         Board board = new Board(createBoard.title());
         boardRepository.save(board);
-        return new CreateBoardResponse(board.getTitle(), board.getCreatedTime(), board.getId());
+        return new CreateBoardResponse(board.getTitle(), board.getCreatedAt(), board.getId());
     }
 
     // 게시판 모두 조회
@@ -51,6 +51,7 @@ public class BoardService {
     public FindDetailBoardResponse findById(Long boardId) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(
                 () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + boardId));
+
         List<FindDetailBoardResponse.Post> posts = findBoard.getPosts()
                 .stream()
                 .map(post -> new FindDetailBoardResponse.Post(post.getTitle(), post.getId()))

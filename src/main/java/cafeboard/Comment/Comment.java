@@ -1,5 +1,6 @@
 package cafeboard.Comment;
 
+import cafeboard.BaseEntity;
 import cafeboard.Member.Member;
 import cafeboard.Post.Post;
 import jakarta.persistence.*;
@@ -10,16 +11,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Comment {
+public class Comment extends BaseEntity {
 
     private String content;
-
-    @CreatedDate
-    LocalDateTime createdTime;
-
-    @LastModifiedDate
-    LocalDateTime updatedTime;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,8 +37,8 @@ public class Comment {
         return content;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreatedAt() {
+        return super.getCreatedAt();
     }
 
     public Long getId() {
@@ -55,8 +49,8 @@ public class Comment {
         return post;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public LocalDateTime getUpdatedAt() {
+        return super.getUpdatedAt();
     }
 
     public void updateContent(String content) {

@@ -1,5 +1,6 @@
 package cafeboard.Post;
 
+import cafeboard.BaseEntity;
 import cafeboard.Board.Board;
 import cafeboard.Comment.Comment;
 import cafeboard.Member.Member;
@@ -14,18 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class Post extends BaseEntity {
 
     private String title;
 
     private String content;
-
-    @CreatedDate
-    private LocalDateTime createdTime;
-
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,8 +55,8 @@ public class Post {
         return content;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreatedAt() {
+        return super.getCreatedAt();
     }
 
     public Long getId() {
@@ -73,8 +67,8 @@ public class Post {
         return title;
     }
 
-    public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+    public LocalDateTime getUpdatedAt() {
+        return super.getUpdatedAt();
     }
 
     public void updateTitle(String title) {

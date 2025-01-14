@@ -1,5 +1,6 @@
 package cafeboard.Board;
 
+import cafeboard.BaseEntity;
 import cafeboard.Member.Member;
 import cafeboard.Post.Post;
 import jakarta.persistence.*;
@@ -12,19 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Board {
+public class Board extends BaseEntity {
 
     private String title;
 
     @OneToMany(mappedBy = "board")
     private List<Post> posts = new ArrayList<>();
-
-    @CreatedDate
-    private LocalDateTime createdTime;
-
-    @LastModifiedDate
-    private LocalDateTime updatedTime;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +35,8 @@ public class Board {
         return posts;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDateTime getCreatedAt() {
+        return super.getCreatedAt();
     }
 
     public Long getId() {
@@ -54,7 +48,7 @@ public class Board {
     }
 
     public LocalDateTime getUpdatedTime() {
-        return updatedTime;
+        return super.getUpdatedAt();
     }
 
     public void updateTitle(String title) {
