@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 public class Board extends BaseEntity {
 
+    @Column(nullable = false)
     private String title;
 
     @OneToMany(mappedBy = "board")

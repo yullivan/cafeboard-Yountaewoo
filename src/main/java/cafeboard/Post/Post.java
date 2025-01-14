@@ -17,8 +17,10 @@ import java.util.List;
 @Entity
 public class Post extends BaseEntity {
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
     @Id
@@ -26,6 +28,7 @@ public class Post extends BaseEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Board board;
 
     @ManyToOne

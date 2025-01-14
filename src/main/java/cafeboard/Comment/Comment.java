@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Comment extends BaseEntity {
 
+    @Column(nullable = false)
     private String content;
 
     @Id
@@ -20,6 +21,7 @@ public class Comment extends BaseEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Post post;
 
     @ManyToOne
