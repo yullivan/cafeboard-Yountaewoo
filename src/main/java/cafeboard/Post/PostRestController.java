@@ -24,7 +24,7 @@ public class PostRestController {
         return postService.findAll();
     }
 
-    //게시글 살세 조회
+    //게시글 상세 조회
     @GetMapping("/posts/{postId}")
     public FindDetailPostResponse findById(@PathVariable Long postId) {
         return postService.findById(postId);
@@ -40,6 +40,12 @@ public class PostRestController {
     @DeleteMapping("/posts/{postId}")
     public void deleteById(@PathVariable Long postId) {
         postService.deleteById(postId);
+    }
+
+    //특정 게시판의 게시글 목록 조회
+    @GetMapping("/posts/boards/{boardId}")
+    public FindAllPostsResponse findByBoardId(@PathVariable Long boardId) {
+        return postService.findByBoardId(boardId);
     }
 }
 

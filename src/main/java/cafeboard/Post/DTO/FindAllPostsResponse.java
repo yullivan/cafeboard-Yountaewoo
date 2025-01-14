@@ -9,7 +9,8 @@ public record FindAllPostsResponse(
 ) {
     public record Post(
             Long postId,
-            int commentCount
+            int commentCount,
+            String title
     ) {
     }
 }

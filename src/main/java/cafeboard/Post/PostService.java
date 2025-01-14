@@ -37,7 +37,7 @@ public class PostService {
     public FindAllPostsResponse findAll() {
         return new FindAllPostsResponse(postRepository.findAll()
                 .stream()
-                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size()))
+                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size(), post.getTitle()))
                 .toList());
     }
 
@@ -68,5 +68,15 @@ public class PostService {
         Post findPost = postRepository.findById(boardId).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + boardId));
         postRepository.delete(findPost);
+    }
+
+    //특정 게시판의 게시글 목록 조회
+    public FindAllPostsResponse findByBoardId(Long boardId) {
+        List<FindAllPostsResponse.Post> list = postRepository.findByBoardId(boardId)
+                .stream()
+                .map(post -> new FindAllPostsResponse.Post(post.getId(), post.getComments().size(), post.getTitle()))
+                .toList();
+        FindAllPostsResponse response = new FindAllPostsResponse(list);
+        return response;
     }
 }
