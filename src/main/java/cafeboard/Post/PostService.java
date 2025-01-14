@@ -4,6 +4,7 @@ import cafeboard.Board.Board;
 import cafeboard.Board.BoardRepository;
 import cafeboard.Board.Dto.CreateBoard;
 import cafeboard.Board.Dto.CreateBoardResponse;
+import cafeboard.Comment.CommentRepository;
 import cafeboard.Post.DTO.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,12 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
-    public PostService(PostRepository postRepository, BoardRepository boardRepository) {
+    public PostService(PostRepository postRepository, BoardRepository boardRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
         this.boardRepository = boardRepository;
+        this.commentRepository = commentRepository;
     }
 
     // 게시글 생성
@@ -64,9 +67,10 @@ public class PostService {
 
     //게시글 삭제
     @Transactional
-    public void deleteById(Long boardId) {
-        Post findPost = postRepository.findById(boardId).orElseThrow(
-                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + boardId));
+    public void deleteById(Long postId) {
+        Post findPost = postRepository.findById(postId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postId));
+        commentRepository.deleteByPostId(postId);
         postRepository.delete(findPost);
     }
 
