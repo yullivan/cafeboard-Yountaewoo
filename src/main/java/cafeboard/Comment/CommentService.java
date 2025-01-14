@@ -1,14 +1,12 @@
 package cafeboard.Comment;
 
-import cafeboard.Comment.DTO.CreateComment;
-import cafeboard.Comment.DTO.CreateCommentResponse;
-import cafeboard.Comment.DTO.UpdateComment;
-import cafeboard.Comment.DTO.UpdateCommentResponse;
+import cafeboard.Comment.DTO.*;
 import cafeboard.Post.Post;
 import cafeboard.Post.PostRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -46,5 +44,14 @@ public class CommentService {
         Comment findComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + commentId));
         commentRepository.delete(findComment);
+    }
+
+    //특정 게시글의 댓글 목록 조회
+    public FindAllComment findByPostId(Long postId) {
+        List<FindAllComment.Comment> comments = commentRepository.findByPostId(postId)
+                .stream()
+                .map(comment -> new FindAllComment.Comment(comment.getContent(), comment.getId()))
+                .toList();
+        return new FindAllComment(comments);
     }
 }

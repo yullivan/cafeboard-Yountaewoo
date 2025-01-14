@@ -1,9 +1,6 @@
 package cafeboard.Comment;
 
-import cafeboard.Comment.DTO.CreateComment;
-import cafeboard.Comment.DTO.CreateCommentResponse;
-import cafeboard.Comment.DTO.UpdateComment;
-import cafeboard.Comment.DTO.UpdateCommentResponse;
+import cafeboard.Comment.DTO.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,5 +27,11 @@ public class CommentRestController {
     @DeleteMapping("/comments/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    //특정 게시글의 댓글 목록 조회
+    @GetMapping("/comments/{postId}")
+    public FindAllComment findByPostId(@PathVariable Long postId) {
+        return commentService.findByPostId(postId);
     }
 }
