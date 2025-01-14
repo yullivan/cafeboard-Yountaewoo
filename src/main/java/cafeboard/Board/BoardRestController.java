@@ -37,10 +37,4 @@ public class BoardRestController {
     public void deleteBoard(@PathVariable Long boardId) {
         boardService.deleteBoard(boardId);
     }
-
-    // 특정 게시판의 게시글 목록 조회
-    @GetMapping("/boards/{boardId}")
-    public FindDetailBoardResponse findById(@PathVariable Long boardId) {
-        return boardService.findById(boardId);
-    }
 }

@@ -46,16 +46,4 @@ public class BoardService {
                 () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + boardId));
         boardRepository.delete(findBoard);
     }
-
-    //특정 게시판의 게시글 목록 조회
-    public FindDetailBoardResponse findById(Long boardId) {
-        Board findBoard = boardRepository.findById(boardId).orElseThrow(
-                () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + boardId));
-
-        List<FindDetailBoardResponse.Post> posts = findBoard.getPosts()
-                .stream()
-                .map(post -> new FindDetailBoardResponse.Post(post.getTitle(), post.getId()))
-                .toList();
-        return new FindDetailBoardResponse(posts);
-    }
 }
