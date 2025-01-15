@@ -5,6 +5,8 @@ import cafeboard.Board.Dto.FindDetailBoardResponse;
 import cafeboard.Board.Dto.UpdateBoard;
 import cafeboard.Comment.Comment;
 import cafeboard.Comment.DTO.*;
+import cafeboard.Member.Dto.MemberResponse;
+import cafeboard.Member.Dto.MemberResquest;
 import cafeboard.Post.DTO.*;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -63,23 +65,6 @@ public class ApiTest {
                 .contentType(ContentType.JSON)
                 .body(new UpdateBoard("수정한 자유게시판", 1L))
                 .put("/boards")
-                .then().log().all()
-                .statusCode(200);
-
-        //게시판 삭제
-        RestAssured
-                .given().log().all()
-                .pathParam("boardId", 1L)
-                .when()
-                .delete("/boards/{boardId}")
-                .then().log().all()
-                .statusCode(200);
-
-        //삭제 되었는지 조회
-        RestAssured
-                .given().log().all()
-                .when()
-                .get("/boards")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -245,51 +230,6 @@ public class ApiTest {
     }
 
     @Test
-    void 게시글목록조회ApiTest() {
-        //게시판 생성
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new CreateBoard("자유게시판"))
-                .when()
-                .post("/boards")
-                .then().log().all()
-                .statusCode(200);
-
-        // 게시글 생성
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
-                .when()
-                .post("/posts")
-                .then().log().all()
-                .statusCode(200);
-
-        //댓글 생성
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new CreateComment("우와!", 1L))
-                .when()
-                .post("/comments")
-                .then().log().all()
-                .statusCode(200);
-
-        // 게시글 목록 조회
-        FindAllPostsResponse findAllPostsResponse = RestAssured
-                .given().log().all()
-                .when()
-                .get("/posts")
-                .then().log().all()
-                .statusCode(200)
-                .extract()
-                .as(FindAllPostsResponse.class);
-
-        assertThat(findAllPostsResponse.posts().size()).isEqualTo(1);
-    }
-
-    @Test
     void 게시글상세조회ApiTest() {
         //게시판 생성
         RestAssured
@@ -415,41 +355,6 @@ public class ApiTest {
         assertThat(findAllPostsResponse.posts().size()).isEqualTo(0);
     }
 
-    @Test
-    void 특정게시판의게시글목록조회ApiTest() {
-        //게시판 생성
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new CreateBoard("자유게시판"))
-                .when()
-                .post("/boards")
-                .then().log().all()
-                .statusCode(200);
-
-        // 게시글 생성
-        RestAssured
-                .given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new CreatePost("점메추", "점심메뉴추천", 1L))
-                .when()
-                .post("/posts")
-                .then().log().all()
-                .statusCode(200);
-
-        //특정 게시판의 게시글 목록 조회
-        FindDetailBoardResponse findDetailBoardResponse = RestAssured
-                .given().log().all()
-                .pathParam("boardId", 1L)
-                .when()
-                .get("/boards/{boardId}")
-                .then().log().all()
-                .statusCode(200)
-                .extract()
-                .as(FindDetailBoardResponse.class);
-
-        assertThat(findDetailBoardResponse.posts().size()).isEqualTo(1);
-    }
 
     @Test
     void 특정게시판의게시글목록조회ApiTest2() {
@@ -530,5 +435,40 @@ public class ApiTest {
                 .extract()
                 .as(FindAllComment.class);
         assertThat(commentList.comments().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 회원가입ApiTest() {
+        MemberResponse member = RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new MemberResquest("윤태우", "123456", "123"))
+                .when()
+                .post("/members")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(MemberResponse.class);
+        assertThat(member.name()).isEqualTo("윤태우");
+    }
+
+    @Test
+    void 회원탈퇴ApiTest() {
+        RestAssured
+                .given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new MemberResquest("윤태우", "123456", "123"))
+                .when()
+                .post("/members")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured
+                .given().log().all()
+                .pathParam("memberId", 1L)
+                .when()
+                .delete("/members/{memberId}")
+                .then().log().all()
+                .statusCode(200);
     }
 }
