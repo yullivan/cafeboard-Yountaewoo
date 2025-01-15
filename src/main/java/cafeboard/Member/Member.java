@@ -14,11 +14,13 @@ import java.util.List;
 @Entity
 public class Member {
 
+    @Column(nullable = false)
     private String userName;
 
+    @Column(nullable = false)
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userId;
 
     @Id
