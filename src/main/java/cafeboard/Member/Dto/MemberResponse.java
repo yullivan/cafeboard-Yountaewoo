@@ -1,6 +1,6 @@
 package cafeboard.Member.Dto;
 
-public record CreateMember(
+public record MemberResponse(
         String name,
         String password,
         String userId

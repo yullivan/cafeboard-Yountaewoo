@@ -1,9 +1,8 @@
 package cafeboard.Member;
 
-import cafeboard.Member.Dto.CreateMember;
-import cafeboard.Member.Dto.CreateMemberResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import cafeboard.Member.Dto.MemberResquest;
+import cafeboard.Member.Dto.MemberResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MemberRestController {
@@ -16,7 +15,13 @@ public class MemberRestController {
 
     //회원가입
     @PostMapping("/members")
-    public CreateMemberResponse createMember(CreateMember createMember) {
-        return memberService.createMember(createMember);
+    public MemberResquest createMember(@RequestBody MemberResponse memberRequest) {
+        return memberService.createMember(memberRequest);
+    }
+
+    //회원탈퇴
+    @DeleteMapping("/members/{memberId}")
+    public void deleteMember(@PathVariable Long memberId) {
+        memberService.deleteMember(memberId);
     }
 }
