@@ -30,8 +30,9 @@ public class Comment extends BaseEntity {
     protected Comment() {
     }
 
-    public Comment(String content, Post post) {
+    public Comment(String content, Member member, Post post) {
         this.content = content;
+        this.member = member;
         this.post = post;
     }
 
