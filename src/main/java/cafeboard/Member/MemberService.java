@@ -45,7 +45,7 @@ public class MemberService {
     }
 
     // 가입한 회원이 자신의 가입 정보를 조회하는 API
-    public MemberResponse getProfile(String authorization) {
+    public String getProfile(String authorization) {
         String[] tokenFormat = authorization.split(" ");
         String tokenType = tokenFormat[0];
         String token = tokenFormat[1];
@@ -60,8 +60,6 @@ public class MemberService {
         // JWT 토큰에서 userId 끄집어냄
         String userId = jwtProvider.getSubject(token);
 
-        Member findMember = memberRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
-        return new MemberResponse(findMember.getUserName(), findMember.getPassword(), findMember.getUserId());
+        return userId;
     }
 }

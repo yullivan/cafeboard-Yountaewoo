@@ -40,10 +40,11 @@ public class Post extends BaseEntity {
     protected Post() {
     }
 
-    public Post(Board board, String title, String content) {
+    public Post(Board board, String title, String content, Member member) {
         this.board = board;
         this.title = title;
         this.content = content;
+        this.member = member;
     }
 
     public List<Comment> getComments() {

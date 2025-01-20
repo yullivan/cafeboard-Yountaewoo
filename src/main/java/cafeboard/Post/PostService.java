@@ -28,14 +28,14 @@ public class PostService {
     }
 
     // 게시글 생성
-    public PostDetailResponse createPost(PostRequest postRequest) {
+    public PostDetailResponse createPost(PostRequest postRequest, String userId) {
         Board findBoard = boardRepository.findById(postRequest.boardId()).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postRequest.boardId()));
 
-        Member findMember = memberRepository.findById(postRequest.memberId()).orElseThrow(
-                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postRequest.memberId()));
+        Member findMember = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + userId));
 
-        Post post = new Post(findBoard, postRequest.title(), findMember, postRequest.content());
+        Post post = new Post(findBoard, postRequest.title(), postRequest.content(), findMember);
         postRepository.save(post);
         return new PostDetailResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedAt()
                 , post.getId());
@@ -62,25 +62,28 @@ public class PostService {
 
     //게시글 수정
     @Transactional
-    public PostDetailResponse updateById(PostDetailRequest postDetailRequest) {
+    public PostDetailResponse updateById(PostDetailRequest postDetailRequest, String userId) {
         Post findPost = postRepository.findById(postDetailRequest.postId()).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postDetailRequest.postId()));
 
-        memberRepository.findById(postDetailRequest.memberId()).orElseThrow(
-                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postDetailRequest.memberId()));
+        memberRepository.findByUserId(userId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + userId));
 
         findPost.updateContent(postDetailRequest.content());
+
         findPost.updateTitle(postDetailRequest.title());
+
         return new PostDetailResponse(findPost.getTitle(), findPost.getContent(), findPost.getBoard()
                 , findPost.getCreatedAt(), findPost.getId());
     }
 
     //게시글 삭제
     @Transactional
-    public void deleteById(Long postId) {
+    public void deleteById(Long postId, String userId) {
         Post findPost = postRepository.findById(postId).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postId));
-        commentRepository.deleteByPostId(postId);
+        memberRepository.findByUserId(userId).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + userId));
         postRepository.delete(findPost);
     }
 

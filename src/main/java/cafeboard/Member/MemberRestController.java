@@ -37,7 +37,7 @@ public class MemberRestController {
 
     // 가입한 회원이 자신의 가입 정보를 조회하는 API
     @GetMapping("/me")
-    public MemberResponse getProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+    public String getProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         return memberService.getProfile(authorization);
     }
 }
