@@ -40,9 +40,7 @@ public class MemberService {
     public String logIn(LogInRequest logInRequest) {
         Member findMember = memberRepository.findByUserId(logInRequest.userId()).orElseThrow(
                 () -> new NoSuchElementException("해당하는 유저가 없습니다"));
-        if (!findMember.getPassword().equals(SecurityUtils.sha256EncryptHex2(logInRequest.password()))) {
-            throw new NoSuchElementException("해당하는 유저가 없습니다");
-        }
+        findMember.findByPassword(logInRequest.password());
         return jwtProvider.createToken(logInRequest.userId());
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -66,5 +67,12 @@ public class Member extends BaseEntity {
 
     public String getUserName() {
         return userName;
+    }
+
+    //입력 받은 비밀번호와 저장된 비밀번호 조회
+    public void findByPassword(String password) {
+        if (!this.getPassword().equals(SecurityUtils.sha256EncryptHex2(password))) {
+            throw new NoSuchElementException("해당하는 유저가 없습니다");
+        }
     }
 }
