@@ -1,8 +1,10 @@
 package cafeboard.Member;
 
+import cafeboard.BaseEntity;
 import cafeboard.Board.Board;
 import cafeboard.Comment.Comment;
 import cafeboard.Post.Post;
+import cafeboard.SecurityUtils;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private String userName;
@@ -33,24 +35,17 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Post> posts;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-
     protected Member() {
     }
 
     public Member(String password, String userId, String userName) {
-        this.password = password;
+        this.password = SecurityUtils.sha256EncryptHex2(password);
         this.userId = userId;
         this.userName = userName;
     }
 
     public List<Comment> getComments() {
         return comments;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
     }
 
     public String getPassword() {

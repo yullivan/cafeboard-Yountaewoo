@@ -1,8 +1,11 @@
 package cafeboard.Member.Dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public record MemberResquest(
-        String name,
-        String password,
-        String userId
+        @NotBlank String name,
+        @NotBlank String password,
+        @NotBlank String userId
 ) {
 }

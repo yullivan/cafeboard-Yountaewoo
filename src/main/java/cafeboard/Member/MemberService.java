@@ -1,19 +1,24 @@
 package cafeboard.Member;
 
+import cafeboard.Member.Dto.LogInRequest;
 import cafeboard.Member.Dto.MemberResquest;
 import cafeboard.Member.Dto.MemberResponse;
+import cafeboard.SecurityUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpHeaders;
 import java.util.NoSuchElementException;
 
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider) {
         this.memberRepository = memberRepository;
+        this.jwtProvider = jwtProvider;
     }
 
     //회원가입
@@ -29,5 +34,36 @@ public class MemberService {
         Member findMember = memberRepository.findById(memberId).orElseThrow(
                 () -> new NoSuchElementException("ID를 찾을 수 없습니다:" + memberId));
         memberRepository.delete(findMember);
+    }
+
+    //로그인
+    public String logIn(LogInRequest logInRequest) {
+        Member findMember = memberRepository.findByUserId(logInRequest.userId()).orElseThrow(
+                () -> new NoSuchElementException("해당하는 유저가 없습니다"));
+        if (!findMember.getPassword().equals(SecurityUtils.sha256EncryptHex2(logInRequest.password()))) {
+            throw new NoSuchElementException("해당하는 유저가 없습니다");
+        }
+        return jwtProvider.createToken(logInRequest.userId());
+    }
+
+    // 가입한 회원이 자신의 가입 정보를 조회하는 API
+    public MemberResponse getProfile(String authorization) {
+        String[] tokenFormat = authorization.split(" ");
+        String tokenType = tokenFormat[0];
+        String token = tokenFormat[1];
+        // Bearer 토큰인지 검증
+        if (tokenType.equals("Bearer") == false) {
+            throw new IllegalArgumentException("로그인 정보가 유효하지 않습니다");
+        }
+        // 유효한 JWT 토큰인지 검증
+        if (jwtProvider.isValidToken(token) == false) {
+            throw new IllegalArgumentException("로그인 정보가 유효하지 않습니다");
+        }
+        // JWT 토큰에서 userId 끄집어냄
+        String userId = jwtProvider.getSubject(token);
+
+        Member findMember = memberRepository.findByUserId(userId).orElseThrow(
+                () -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+        return new MemberResponse(findMember.getUserName(), findMember.getPassword(), findMember.getUserId());
     }
 }
