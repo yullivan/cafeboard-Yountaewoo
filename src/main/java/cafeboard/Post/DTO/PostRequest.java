@@ -1,6 +1,6 @@
 package cafeboard.Post.DTO;
 
-public record CreatePost(
+public record PostRequest(
         String title,
         String content,
         Long boardId
