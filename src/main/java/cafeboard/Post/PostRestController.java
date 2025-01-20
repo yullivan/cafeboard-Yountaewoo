@@ -14,7 +14,7 @@ public class PostRestController {
 
     // 게시글 생성
     @PostMapping("/posts")
-    public CreatePostResponse createPost(@RequestBody CreatePost createPost) {
+    public PostDetailResponse createPost(@RequestBody PostRequest createPost) {
         return postService.createPost(createPost);
     }
 
@@ -32,7 +32,7 @@ public class PostRestController {
 
     //게시글 수정
     @PutMapping("/posts")
-    public UpdatePostResponse updateById(@RequestBody UpdatePost updatePost) {
+    public PostDetailResponse updateById(@RequestBody PostDetailRequest updatePost) {
         return postService.updateById(updatePost);
     }
 

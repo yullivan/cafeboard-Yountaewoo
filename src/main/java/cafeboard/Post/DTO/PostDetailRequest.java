@@ -1,8 +1,9 @@
 package cafeboard.Post.DTO;
 
-public record UpdatePost(
+public record PostDetailRequest(
         String title,
         String content,
-        Long id
+        Long postId,
+        Long memberId
 ) {
 }

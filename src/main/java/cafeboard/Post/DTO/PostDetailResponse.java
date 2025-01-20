@@ -4,7 +4,7 @@ import cafeboard.Board.Board;
 
 import java.time.LocalDateTime;
 
-public record CreatePostResponse(
+public record PostDetailResponse(
         String title,
         String content,
         Board board,

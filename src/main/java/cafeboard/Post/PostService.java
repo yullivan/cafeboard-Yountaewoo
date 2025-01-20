@@ -2,13 +2,12 @@ package cafeboard.Post;
 
 import cafeboard.Board.Board;
 import cafeboard.Board.BoardRepository;
-import cafeboard.Board.Dto.CreateBoard;
-import cafeboard.Board.Dto.CreateBoardResponse;
 import cafeboard.Comment.CommentRepository;
+import cafeboard.Member.Member;
+import cafeboard.Member.MemberRepository;
 import cafeboard.Post.DTO.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,20 +18,26 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
-    public PostService(PostRepository postRepository, BoardRepository boardRepository, CommentRepository commentRepository) {
+    public PostService(PostRepository postRepository, BoardRepository boardRepository, CommentRepository commentRepository, MemberRepository memberRepository) {
         this.postRepository = postRepository;
         this.boardRepository = boardRepository;
         this.commentRepository = commentRepository;
+        this.memberRepository = memberRepository;
     }
 
     // 게시글 생성
-    public CreatePostResponse createPost(CreatePost createPost) {
-        Board findBoard = boardRepository.findById(createPost.boardId()).orElseThrow(
-                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + createPost.boardId()));
-        Post post = new Post(findBoard, createPost.title(), createPost.content());
+    public PostDetailResponse createPost(PostRequest postRequest) {
+        Board findBoard = boardRepository.findById(postRequest.boardId()).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postRequest.boardId()));
+
+        Member findMember = memberRepository.findById(postRequest.memberId()).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postRequest.memberId()));
+
+        Post post = new Post(findBoard, postRequest.title(), findMember, postRequest.content());
         postRepository.save(post);
-        return new CreatePostResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedAt()
+        return new PostDetailResponse(post.getTitle(), post.getContent(), findBoard, post.getCreatedAt()
                 , post.getId());
     }
 
@@ -57,12 +62,17 @@ public class PostService {
 
     //게시글 수정
     @Transactional
-    public UpdatePostResponse updateById(UpdatePost updatePost) {
-        Post findPost = postRepository.findById(updatePost.id()).orElseThrow(
-                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + updatePost.id()));
-        findPost.updateContent(updatePost.content());
-        findPost.updateTitle(updatePost.title());
-        return new UpdatePostResponse(findPost.getTitle(), findPost.getContent(), findPost.getId());
+    public PostDetailResponse updateById(PostDetailRequest postDetailRequest) {
+        Post findPost = postRepository.findById(postDetailRequest.postId()).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postDetailRequest.postId()));
+
+        memberRepository.findById(postDetailRequest.memberId()).orElseThrow(
+                () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + postDetailRequest.memberId()));
+
+        findPost.updateContent(postDetailRequest.content());
+        findPost.updateTitle(postDetailRequest.title());
+        return new PostDetailResponse(findPost.getTitle(), findPost.getContent(), findPost.getBoard()
+                , findPost.getCreatedAt(), findPost.getId());
     }
 
     //게시글 삭제
