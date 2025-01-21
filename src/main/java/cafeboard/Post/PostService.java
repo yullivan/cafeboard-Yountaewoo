@@ -69,6 +69,9 @@ public class PostService {
         memberRepository.findByUserId(userId).orElseThrow(
                 () -> new NoSuchElementException("ID 를 찾을 수 없습니다:" + userId));
 
+
+        //
+
         findPost.updateContent(postDetailRequest.content());
 
         findPost.updateTitle(postDetailRequest.title());

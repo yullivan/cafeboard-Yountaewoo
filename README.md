@@ -1,85 +1,145 @@
-# 게시판 "/boards"
+# Entity
 
-## Body parameter
+## user(사용자)
 
-- "title" : "String" -> 게시판 이름
-- createdTime : LocalDateTime -> 생성시간
-- posts : List<Post> -> 게시글들
+## post(게시글)
 
-### 생성 Post
+## comment(댓글)
 
-- "title" : "String" -> 게시판 이름
-- createdTime : LocalDateTime -> 생성시간
+# API Spec
 
-### 조회 Get
+### user(사용자) 필드
 
-- id : long -> 게시판 ID
+- userName(사용자 이름)
+- nickName(닉네임) unique
+- loginId(로그인용 아이디) -> DB 테이블에서도 ID 로 사용 unique
+- password(비밀번호) 
+- gender(성별)
+- birth(생년월일)
+- content(소개)
+- profileImage(프로필 이미지)
+- phoneNumber(전화번호) unique
 
-### 수정 "/boards/{boardId}" Put
+### 생성자
 
-- id : long -> 게시판 ID
-- "title" : "String" -> 게시판 이름
+- userName(사용자 이름)
+- nickName(닉네임)
+- loginId(로그인용 아이디)
+- password(비밀번호)
+- gender(성별)
+- birth(생년월일)
+- content(소개)
+- profileImage(프로필 이미지)
+- phoneNumber(전화번호)
 
-### 삭제 "/boards/{boardId}" Delete
+### 회원가입 (Post) (/users) @RequestBody
 
-- id : long -> 게시판 ID
+- userName(사용자 이름)
+- nickName(닉네임)
+- loginId(로그인용 아이디)
+- password(비밀번호)
+- gender(성별)
+- birth(생년월일)
+- content(소개)
+- profileImage(프로필 이미지)
+- phoneNumber(전화번호)
 
-# 게시글  "/posts"
+### 로그인 (post) (/login) // 토큰 넣는거 잊지 말기!!
 
-## Body parameter
+- loginId(로그인용 아이디)
+- password(비밀번호)
 
-- title : "String" -> 게시글 이름
-- content : "String" -> 게시글 내용
-- board : Board -> 게시판
-- createdTime : LocalDateTime -> 생성시간
-- writer: "String" -> 작성자
-- comments : List<comment> -> 댓글들
+### 회원탈퇴 (Delete) (/users) // 토큰 받고
 
-### 생성 Post
+- password(비밀번호)
+  (회원을 탈퇴한다면 게시글과 댓글도 삭제)
 
-- title : "String" -> 게시글 이름
-- content : "String" -> 게시글 내용
-- id : long -> 게시판 ID
-- createdTime : LocalDateTime -> 생성시간
+### 회원수정 (Put) (/users)  @RequestBody // 토큰으로 user 찾기
 
-### 조회 Get
+- userName(사용자 이름)
+- nickName(닉네임)
+- gender(성별)
+- birth(생년월일)
+- content(소개)
+- profileImage(프로필 이미지)
+- phoneNumber(전화번호)
 
-- 게시글 ID
+## post (게시글) 필드
 
-### 수정 "/posts/{postId}" Put
+- List<String> imageUrl (사진들) elementCollection
+- String content (내용)
+- User user (사용자)
+- Long id 
+- int commentCount (댓글 수)
 
-- id : long -> 게시판 ID
-- writerName : "String" -> 작성자 이름
+### 게시글 생성 (post) (/posts)  @RequestBody (사용자) -> 토큰값으로
 
-### 삭제"/posts/{postId}" Delete
+- List<String> imageUrl (사진들) elementCollection
+- String content (내용)
 
-- id : long -> 게시판 ID
-- writerName : "String" -> 작성자 이름
+### nickName 로 게시글 조회 (Get) (/posts/{nickName}) @PathVariable
 
-# 댓글 "/comments"
+-String nickName(사용자 닉네임)
 
-## Body parameter
 
-- writer : "String" -> 작성자 이름
-- content : "String" -> 댓글 내용
-- post : Post -> 게시글
-- createdTime : LocalDateTime -> 생성시간
+### 게시글 전체 조회 (생성시간으로 정렬해서 return) (Get) (/posts)
 
-### 생성 Post
+### 게시글 상세 조회 (Get) (/posts/{postId}) @PathVariable
 
-- writer : "String" -> 작성자 이름
-- content : "String" -> 댓글 내용
-- postId : long ->게시글 ID
+@PAthVariable 에서 받는 값
+--Long postId
 
-### 조회 Get
+Response Dto 필드
+- List<String> imageUrl (사진들)
+- String content (내용)
+- List<Comment> Comments -> 따로 (Comment 에 해당하는)dto 만드세요
+-> commentRepository 를 사용하세요!
 
-- commentId : long -> 댓글 ID
+### 게시글 수정 (토큰값 받기) (Put) (/posts/{postId}) @PAthVariable ,@RequestBody 
 
-### 수정 "/comments/{commentId}" Put
+(postId 로 찾은 post 의 user 가 토큰으로 찾은 user 와 동일한지)
+@RequestBody 에서 받는 값
+- List<String> imageUrl (사진들)
+- String content (내용)
 
-- commentId : long -> 댓글 ID
--
+@PAthVariable 에서 받는 값
+-Long postId
 
-### 삭제 "/comments/{commentId}" Delete
+(imageUrl 을 주지 않으면 원해 있던 이미지 그대로 올리기)
 
-- commentId : long -> 댓글 ID
+
+### 게시글 삭제 (토큰값 받기) (Delete) (/posts/{postId}) @PathVariable
+
+(postId 로 찾은 post 의 user 가 토큰으로 찾은 user 와 동일한지)
+
+-@PAthVariable 에서 받는 값
+- Long postId
+
+## Comment (댓글) 필드
+
+- String content (내용)
+- Long id 
+- User user (사용자)
+- Post post (게시글)
+
+### 댓글 생성 (토큰) (Post) (/comments) @RequestBody 
+
+(토큰으로 사용자 찾기)
+- String content (내용)
+- Long postId (게시글 Id) -> Post 찾기
+
+### 댓글 수정 (토큰) (Put) (/comments/{commentId}) @PathVariable, @RequestBody
+
+(commentId 로 찾은 comment 의 user 가 토큰으로 찾은 user 와 동일한지)
+
+@PAthVariable 에서 받는 값
+- Long commentId
+
+@RequestBody 에서 받는 값
+- String content (내용)
+### 댓글 삭제 (토큰) (Delete) (/comments/commentId)  @PathVariable
+
+(commentId 로 찾은 comment 의 user 가 토큰으로 찾은 user 와 동일한지)
+
+@PAthVariable 에서 받는 값
+- Long commentId

@@ -41,6 +41,8 @@ public class MemberService {
         Member findMember = memberRepository.findByUserId(logInRequest.userId()).orElseThrow(
                 () -> new NoSuchElementException("해당하는 유저가 없습니다"));
         findMember.findByPassword(logInRequest.password());
+
+
         return jwtProvider.createToken(logInRequest.userId());
     }
 
